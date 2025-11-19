@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Berties Books - All Books</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header>
+      <h1>Berties Book Shop</h1>
+    </header>
+
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/books/list">List books</a>
+      <a href="/books/addbook">Add book</a>
+      <a href="/books/bargainbooks">Bargain books</a>
+      <a href="/books/search">Search</a>
+      <a href="/users/register">Register</a>
+      <a href="/users/login">Login</a>
+      <a href="/users/list">Users</a>
+      <a href="/users/audit">Audit</a>
+    </nav>
+
+    <main>
+      <h2>All available books</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Book name</th>
+            <th>Price (£)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (availableBooks && availableBooks.length > 0) { %>
+            <% availableBooks.forEach(function(book) { %>
+              <tr>
+                <td><%= book.id %></td>
+                <td><%= book.name %></td>
+                <td><%= book.price.toFixed ? book.price.toFixed(2) : book.price %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="3">No books found.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </main>
+
+    <footer>
+      &copy; <%= new Date().getFullYear() %> Berties Books
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Audit log, Berties Books</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header>
+      <h1>Login Audit Log</h1>
+    </header>
+
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/books/list">List books</a>
+      <a href="/books/addbook">Add book</a>
+      <a href="/books/bargainbooks">Bargain books</a>
+      <a href="/books/search">Search</a>
+      <a href="/users/register">Register</a>
+      <a href="/users/login">Login</a>
+      <a href="/users/list">Users</a>
+      <a href="/users/audit">Audit</a>
+    </nav>
+
+    <main>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Username</th>
+            <th>Success</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (entries && entries.length > 0) { %>
+            <% entries.forEach(function(e) { %>
+              <tr>
+                <td><%= e.log_time %></td>
+                <td><%= e.username %></td>
+                <td><%= e.success ? 'Yes' : 'No' %></td>
+                <td><%= e.message %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="4">No audit entries yet.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </main>
+
+    <footer>
+      &copy; <%= new Date().getFullYear() %> Berties Books
+    </footer>
+  </body>
+</html>

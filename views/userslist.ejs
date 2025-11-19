@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Users - Berties Books</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header>
+      <h1>Registered Users</h1>
+    </header>
+
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/books/list">List books</a>
+      <a href="/books/addbook">Add book</a>
+      <a href="/books/bargainbooks">Bargain books</a>
+      <a href="/books/search">Search</a>
+      <a href="/users/register">Register</a>
+      <a href="/users/login">Login</a>
+      <a href="/users/list">Users</a>
+      <a href="/users/audit">Audit</a>
+    </nav>
+
+    <main>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (users && users.length > 0) { %>
+            <% users.forEach(function(u) { %>
+              <tr>
+                <td><%= u.id %></td>
+                <td><%= u.username %></td>
+                <td><%= u.first_name %></td>
+                <td><%= u.last_name %></td>
+                <td><%= u.email %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="5">No users found.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </main>
+
+    <footer>
+      &copy; <%= new Date().getFullYear() %> Berties Books
+    </footer>
+  </body>
+</html>
