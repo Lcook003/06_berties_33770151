@@ -158,4 +158,15 @@ router.get('/audit', redirectLogin, (req, res, next) => {
   });
 });
 
+// Logout - accessed as /users/logout because this router is mounted on /users
+router.get('/logout', redirectLogin, (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      // If something goes wrong destroying the session, redirect to login
+      return res.redirect('./login');
+    }
+    res.send("You are now logged out. <a href=\"/users/login\">Login again</a>");
+  });
+});
+
 module.exports = router;
