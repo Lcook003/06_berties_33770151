@@ -6,6 +6,17 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const saltRounds = 10;
 
+// Lab 8a - authorisation helper
+const redirectLogin = (req, res, next) => {
+  if (!req.session.userId) {
+    return res.redirect('./login');
+  }
+  next();
+};
+
+// Lab 8b - validator import
+const { check, validationResult } = require('express-validator');
+
 // registeraton
 
 // registration form
@@ -14,50 +25,51 @@ router.get('/register', (req, res) => {
 });
 
 // Handling registration
-router.post('/registered', (req, res, next) => {
-  const { username, first, last, email, password } = req.body;
-  const plainPassword = password;
+router.post(
+  '/registered',
+  [
+    check('email').isEmail(),
+    check('username').isLength({ min: 5, max: 20 }),
+    check('password').isLength({ min: 8 })
+  ],
+  (req, res, next) => {
 
-  if (!username || !plainPassword) {
-    return res.status(400).send('Username and password are required.');
-  }
-
-  bcrypt.hash(plainPassword, saltRounds, function (err, hashedPassword) {
-    if (err) {
-      return next(err);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.render('register.ejs'); 
     }
 
-    const sqlquery =
-      'INSERT INTO users (username, first_name, last_name, email, hashedPassword) VALUES (?,?,?,?,?)';
-    const newUser = [username, first, last, email, hashedPassword];
+    // Lab 8b sanitisation
+    const username = req.sanitize(req.body.username);
+    const first = req.sanitize(req.body.first);
+    const last = req.sanitize(req.body.last);
+    const email = req.sanitize(req.body.email);
+    const password = req.sanitize(req.body.password);
 
-    db.query(sqlquery, newUser, (err2) => {
-      if (err2) {
-        return next(err2);
-      }
+    bcrypt.hash(password, saltRounds, function (err, hashedPassword) {
+      if (err) return next(err);
 
-      let result =
-        'Hello ' +
-        first +
-        ' ' +
-        last +
-        ' you are now registered! We will send an email to you at ' +
-        email +
-        '.<br>';
-      result +=
-        'Your password is: ' +
-        plainPassword +
-        ' and your hashed password is: ' +
-        hashedPassword;
+      let sqlquery =
+        'INSERT INTO users (username, first_name, last_name, email, hashedPassword) VALUES (?,?,?,?,?)';
+      let values = [username, first, last, email, hashedPassword];
 
-      res.send(result);
+      db.query(sqlquery, values, (err, result) => {
+        if (err) return next(err);
+
+        res.send(`
+          Hello ${first} ${last}, you are now registered.<br>
+          Email: ${email}<br>
+          Your username: ${username}<br>
+          (Password hashed securely)
+        `);
+      });
     });
-  });
-});
+  }
+);
 
 // List users 
 
-router.get('/list', (req, res, next) => {
+router.get('/list', redirectLogin, (req, res, next) => {
   const sqlquery =
     'SELECT id, username, first_name, last_name, email FROM users';
   db.query(sqlquery, (err, result) => {
@@ -101,6 +113,7 @@ router.post('/loggedin', (req, res, next) => {
         }
 
         if (match === true) {
+          req.session.userId = req.body.username;
           logAudit(username, true, 'Login successful', () => {
             res.send(
               'Login successful. Welcome, ' +
@@ -135,7 +148,7 @@ function logAudit(username, success, message, callback) {
   });
 }
 
-router.get('/audit', (req, res, next) => {
+router.get('/audit', redirectLogin, (req, res, next) => {
   const sql = 'SELECT * FROM audit_log ORDER BY log_time DESC, id DESC';
   db.query(sql, (err, result) => {
     if (err) {

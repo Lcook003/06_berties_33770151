@@ -5,6 +5,8 @@ require('dotenv').config(); // load .env if present
 var express = require('express');
 var ejs = require('ejs');
 var mysql = require('mysql2');
+var session = require('express-session');         // Lab 8a
+const expressSanitizer = require('express-sanitizer'); // Lab 8b
 
 var app = express();
 var port = 8000;
@@ -17,6 +19,19 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (CSS)
 app.use(express.static('public'));
+
+// Create session (Lab 8a)
+app.use(session({
+  secret: 'somerandomstuff', // required by Lab 8
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    expires: 600000 // 10 minutes
+  }
+}));
+
+// Create input sanitiser (Lab 8b)
+app.use(expressSanitizer());
 
 // Database connection pool (uses dotenv with sensible defaults)
 const db = mysql.createPool({
