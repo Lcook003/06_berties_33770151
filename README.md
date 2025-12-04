@@ -35,3 +35,21 @@ First name, last name, email, username, and password sanitised using req.sanitiz
 Protects against XSS
 
 Demonstrated vulnerability with Henry <script>alert("Gotcha!")</script>
+
+Weather API (Lab 9a)
+	•	/weather form
+	•	/weather/now?city=London
+	•	Uses OpenWeatherMap API
+	•	Handles errors safely
+	•	Displays temp, humidity, wind
+
+Books API (Lab 9b)
+	•	/api/books JSON endpoint
+	•	Supports:
+	•	search (keyword)
+	•	minprice, maxprice
+	•	sort=name|price
+
+Deployment
+	•	Running on VM with forever
+	•	links.txt contains single required line
