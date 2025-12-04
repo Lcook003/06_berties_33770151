@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const request = require('request');     // Lab 9a requirement
+const request = require('request');     // Lab 9 requirement
 
 // GET /weather show weather form
 router.get('/weather', (req, res) => {
@@ -10,7 +10,7 @@ router.get('/weather', (req, res) => {
 // GET /weather/now?city=London
 router.get('/weather/now', (req, res, next) => {
   let city = req.query.city || 'London';
-  let apiKey = process.env.WEATHER_API_KEY;    // store key safely!
+  let apiKey = process.env.WEATHER_API_KEY;    // storing key safely!
   
   if (!apiKey) return res.send("Missing API key. Add WEATHER_API_KEY to .env");
 
@@ -36,7 +36,7 @@ router.get('/weather/now', (req, res, next) => {
       });
     }
 
-    // Build human friendly message
+    // human friendly message
     let wmsg = `
       <h2>Weather in ${weather.name}</h2>
       <p>Temperature: ${weather.main.temp}°C</p>
