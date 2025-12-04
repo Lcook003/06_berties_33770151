@@ -51,10 +51,14 @@ global.db = db;
 const mainRoutes = require('./routes/main');
 const bookRoutes = require('./routes/books');
 const userRoutes = require('./routes/users');
+const weatherRoutes = require('./routes/weather');
+const apiRoutes = require('./routes/api');
 
 app.use('/', mainRoutes);
 app.use('/books', bookRoutes);
 app.use('/users', userRoutes);
+app.use('/', weatherRoutes);
+app.use('/api', apiRoutes);
 
 app.listen(port, () => {
   console.log(`Berties Books app listening on port ${port}!`);
